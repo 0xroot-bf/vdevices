@@ -17,7 +17,6 @@ MODULE_LICENSE("GPL");
 
 #define DEBUG_DEVICE_NAME "debug"
 
-/* parameters */
 static int debug_ndevices = DEBUG_NDEVICES;
 static unsigned long debug_buffer_size = DEBUG_BUFFER_SIZE;
 static unsigned long debug_block_size = DEBUG_BLOCK_SIZE;
@@ -30,8 +29,7 @@ static unsigned int debug_major = 0;
 static struct debug_dev *debug_devices = NULL;
 static struct class *debug_class = NULL;
 
-int debug_open(struct inode *inode, struct file *filp)
-{
+int debug_open(struct inode *inode, struct file *filp) {
 	unsigned int mj = imajor(inode);
 	unsigned int mn = iminor(inode);
 	
@@ -66,15 +64,9 @@ int debug_open(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-int 
-debug_release(struct inode *inode, struct file *filp)
-{
-	return 0;
-}
+int debug_release(struct inode *inode, struct file *filp){	return 0; }
 
-ssize_t 
-debug_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
-{
+ssize_t debug_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos) {
 	struct debug_dev *dev = (struct debug_dev *)filp->private_data;
 	ssize_t retval = 0;
 	
@@ -104,9 +96,7 @@ out:
 	return retval;
 }
                 
-ssize_t 
-debug_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
-{
+ssize_t debug_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos) {
 	struct debug_dev *dev = (struct debug_dev *)filp->private_data;
 	ssize_t retval = 0;
 	
@@ -139,9 +129,7 @@ out:
 	return retval;
 }
 
-loff_t 
-debug_llseek(struct file *filp, loff_t off, int whence)
-{
+loff_t debug_llseek(struct file *filp, loff_t off, int whence) {
 	struct debug_dev *dev = (struct debug_dev *)filp->private_data;
 	loff_t newpos = 0;
 	
@@ -178,8 +166,7 @@ struct file_operations debug_fops = {
 };
 
 
-static int debug_construct_device(struct debug_dev *dev, int minor, struct class *class)
-{
+static int debug_construct_device(struct debug_dev *dev, int minor, struct class *class) {
 	int err = 0;
 	dev_t devno = MKDEV(debug_major, minor);
     struct device *device = NULL;
@@ -198,8 +185,7 @@ static int debug_construct_device(struct debug_dev *dev, int minor, struct class
 	err = cdev_add(&dev->cdev, devno, 1);
 	if (err)
 	{
-		printk(KERN_WARNING "[DEBUG ERROR] Error %d while trying to add %s%d",
-			err, DEBUG_DEVICE_NAME, minor);
+		printk(KERN_WARNING "[DEBUG ERROR] Error %d while trying to add %s%d", err, DEBUG_DEVICE_NAME, minor);
         return err;
 	}
 
@@ -207,8 +193,7 @@ static int debug_construct_device(struct debug_dev *dev, int minor, struct class
 
     if (IS_ERR(device)) {
         err = PTR_ERR(device);
-        printk(KERN_WARNING "[DEBUG ERROR] Error %d while trying to create %s%d",
-			err, DEBUG_DEVICE_NAME, minor);
+        printk(KERN_WARNING "[DEBUG ERROR] Error %d while trying to create %s%d", err, DEBUG_DEVICE_NAME, minor);
         cdev_del(&dev->cdev);
         return err;
     }
@@ -216,8 +201,7 @@ static int debug_construct_device(struct debug_dev *dev, int minor, struct class
 }
 
 /* Destroy the device and free its buffer */
-static void debug_destroy_device(struct debug_dev *dev, int minor,
-    struct class *class)
+static void debug_destroy_device(struct debug_dev *dev, int minor, struct class *class)
 {
     BUG_ON(dev == NULL || class == NULL);
     device_destroy(class, MKDEV(debug_major, minor));
@@ -230,7 +214,6 @@ static void debug_cleanup_module(int devices_to_destroy)
 {
 	int i;
 	
-	/* Get rid of character devices (if any exist) */
 	if (debug_devices) {
 		for (i = 0; i < devices_to_destroy; ++i) {
 		    debug_destroy_device(&debug_devices[i], i, debug_class);

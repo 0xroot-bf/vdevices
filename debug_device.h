@@ -16,14 +16,6 @@
 #define DEBUG_BLOCK_SIZE 512
 #endif
 
-/* The structure to represent 'debug' devices. 
- *  data - data buffer;
- *  buffer_size - size of the data buffer;
- *  block_size - maximum number of bytes that can be read or written 
- *    in one call;
- *  debug_mutex - a mutex to protect the fields of this structure;
- *  cdev - ñharacter device structure.
- */
 struct debug_dev {
 	unsigned char *data;
 	unsigned long buffer_size; 
