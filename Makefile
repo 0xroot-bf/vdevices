@@ -3,12 +3,12 @@ PATCHLEVEL = 6
 SUBLEVEL = 29
 EXTRAVERSION = -00054-g5f01537
 
-obj-m += vialab_device.o
+obj-m += debug_device.o
 
 # Cambiar al directorio del fuente del kernel
-KDIR = /Users/sebas/Investigacion/goldfish
+KDIR = __PATH TO THE KERNEL SOURCE__
 # Cambiar al directorio de las herramientas para hacer cross compiling
-CROSS_COMPILE= /Users/sebas/Investigacion/android-ndk-r8b/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/bin/arm-linux-androideabi-
+CROSS_COMPILE= __PATH TO YOUR CROSS COMPILING TOOLS__
 PWD := $(shell pwd)
 
 all:
